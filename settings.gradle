@@ -1,0 +1,14 @@
+/*
+ * FRC Team 5190
+ * Green Hope Falcons
+ */
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    }
+}
+
+rootProject.name='2017Offseason'
+
