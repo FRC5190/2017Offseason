@@ -10,10 +10,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.amp
 import org.ghrobotics.lib.mathematics.units.derivedunits.volt
-import org.ghrobotics.lib.mathematics.units.meter
 import org.ghrobotics.lib.mathematics.units.millisecond
+import org.ghrobotics.lib.mathematics.units.second
 import org.ghrobotics.lib.wrappers.NativeFalconSRX
 import org.ghrobotics.robot.Constants
+import kotlin.properties.Delegates
 
 object DriveSubsystem : FalconSubsystem() {
 
@@ -29,6 +30,20 @@ object DriveSubsystem : FalconSubsystem() {
     private val rightMotors = arrayOf(rightMaster, rightSlave1)
 
     private val allMotors = arrayOf(*leftMotors, *rightMotors)
+
+    var lowPowerMode by Delegates.observable(false) { _, _, lowPowerMode ->
+        allMotors.forEach {
+            it.voltageCompensationSaturation = 12.volt * (if (lowPowerMode) 0.7 else 1.0)
+            it.voltageCompensationEnabled = true
+
+            it.peakCurrentLimit = 0.amp
+            it.peakCurrentLimitDuration = 0.millisecond
+            it.continuousCurrentLimit = if (lowPowerMode) 20.amp else 40.amp
+            it.currentLimitingEnabled = true
+
+            it.openLoopRamp = if (lowPowerMode) 250.millisecond else 0.second
+        }
+    }
 
     init {
         mutableListOf(leftSlave1).forEach {
@@ -51,16 +66,6 @@ object DriveSubsystem : FalconSubsystem() {
             it.nominalReverseOutput = 0.0
 
             it.brakeMode = NeutralMode.Brake
-
-            it.voltageCompensationSaturation = 12.volt
-            it.voltageCompensationEnabled = true
-
-            it.peakCurrentLimit = 0.amp
-            it.peakCurrentLimitDuration = 0.millisecond
-            it.continuousCurrentLimit = 20.amp
-            it.currentLimitingEnabled = true
-
-            it.openLoopRamp = 250.millisecond
         }
 
         defaultCommand = ManualDriveCommand()

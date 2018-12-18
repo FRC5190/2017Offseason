@@ -1,4 +1,9 @@
-package org.ghrobotics.robot.subsytems.drive
+/*
+ * FRC Team 5190
+ * Green Hope Falcons
+ */
+
+package org.ghrobotics.robot.subsytems.shooter
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import org.ghrobotics.lib.commands.FalconCommand
@@ -6,9 +11,9 @@ import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.amp
 import org.ghrobotics.lib.mathematics.units.millisecond
-import org.ghrobotics.lib.mathematics.units.second
 import org.ghrobotics.lib.wrappers.NativeFalconSRX
 import org.ghrobotics.robot.Constants
+import kotlin.properties.Delegates
 
 object ShooterSubsystem : FalconSubsystem() {
 
@@ -29,7 +34,7 @@ object ShooterSubsystem : FalconSubsystem() {
             }
 
             override suspend fun initialize() {
-                shooterMaster.set(ControlMode.PercentOutput, 0.8)
+                shooterMaster.set(ControlMode.PercentOutput, if (lowShoot) 0.8 else 1.0)
             }
         }
         +object : FalconCommand(this@ShooterSubsystem) {
@@ -39,13 +44,19 @@ object ShooterSubsystem : FalconSubsystem() {
         }
     }
 
-    init {
+    var lowPowerMode by Delegates.observable(false) { _, _, lowPowerMode ->
         listOf(shooterMaster, agitatorMaster).forEach {
             it.peakCurrentLimit = 0.amp
             it.peakCurrentLimitDuration = 0.millisecond
-            it.continuousCurrentLimit = 30.amp
+            it.continuousCurrentLimit = if (lowPowerMode) 30.amp else 40.amp
             it.currentLimitingEnabled = true
+        }
+    }
 
+    var lowShoot = true
+
+    init {
+        listOf(shooterMaster, agitatorMaster).forEach {
             it.openLoopRamp = 250.millisecond
         }
 
