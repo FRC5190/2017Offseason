@@ -40,7 +40,6 @@ dependencies {
     // Although WPILib should come from FalconLibrary, it apparently needs to be here for :extractJNI
     compile wpilib()
     compile ctre()
-    compile openrio.powerup.matchData()
 
     // FalconLibrary
     compile "com.github.5190GreenHopeRobotics:FalconLibrary:bc749ef" // Jitpack
