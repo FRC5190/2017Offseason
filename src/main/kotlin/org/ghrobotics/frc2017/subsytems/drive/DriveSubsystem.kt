@@ -3,18 +3,17 @@
  * Green Hope Falcons
  */
 
-package org.ghrobotics.robot.subsytems.drive
+package org.ghrobotics.frc2017.subsytems.drive
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.NeutralMode
-import edu.wpi.first.wpilibj.SpeedController
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.amp
 import org.ghrobotics.lib.mathematics.units.derivedunits.volt
 import org.ghrobotics.lib.mathematics.units.millisecond
 import org.ghrobotics.lib.mathematics.units.second
 import org.ghrobotics.lib.wrappers.NativeFalconSRX
-import org.ghrobotics.robot.Constants
+import org.ghrobotics.frc2017.Constants
 import kotlin.properties.Delegates
 
 object DriveSubsystem : FalconSubsystem() {

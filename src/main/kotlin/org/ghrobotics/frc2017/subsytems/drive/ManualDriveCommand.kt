@@ -3,9 +3,8 @@
  * Green Hope Falcons
  */
 
-package org.ghrobotics.robot.subsytems.drive
+package org.ghrobotics.frc2017.subsytems.drive
 
-import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.GenericHID
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.utils.withDeadband
@@ -13,7 +12,7 @@ import org.ghrobotics.lib.wrappers.hid.getRawButton
 import org.ghrobotics.lib.wrappers.hid.getX
 import org.ghrobotics.lib.wrappers.hid.getY
 import org.ghrobotics.lib.wrappers.hid.kX
-import org.ghrobotics.robot.Controls
+import org.ghrobotics.frc2017.Controls
 
 class ManualDriveCommand : FalconCommand(DriveSubsystem) {
 

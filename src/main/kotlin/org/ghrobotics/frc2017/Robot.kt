@@ -3,15 +3,15 @@
  * Green Hope Falcons
  */
 
-package org.ghrobotics.robot
+package org.ghrobotics.frc2017
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import kotlinx.coroutines.GlobalScope
 import org.ghrobotics.lib.utils.launchFrequency
 import org.ghrobotics.lib.wrappers.FalconRobotBase
-import org.ghrobotics.robot.subsytems.drive.DriveSubsystem
-import org.ghrobotics.robot.subsytems.shooter.ShooterSubsystem
+import org.ghrobotics.frc2017.subsytems.drive.DriveSubsystem
+import org.ghrobotics.frc2017.subsytems.shooter.ShooterSubsystem
 import kotlin.properties.Delegates.observable
 
 class Robot : FalconRobotBase() {

@@ -3,7 +3,7 @@
  * Green Hope Falcons
  */
 
-package org.ghrobotics.robot
+package org.ghrobotics.frc2017
 
 object Constants {
     // MOTOR IDS

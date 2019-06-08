@@ -3,7 +3,7 @@
  * Green Hope Falcons
  */
 
-package org.ghrobotics.robot.subsytems.shooter
+package org.ghrobotics.frc2017.subsytems.shooter
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import org.ghrobotics.lib.commands.FalconCommand
@@ -12,7 +12,7 @@ import org.ghrobotics.lib.commands.sequential
 import org.ghrobotics.lib.mathematics.units.amp
 import org.ghrobotics.lib.mathematics.units.millisecond
 import org.ghrobotics.lib.wrappers.NativeFalconSRX
-import org.ghrobotics.robot.Constants
+import org.ghrobotics.frc2017.Constants
 import kotlin.properties.Delegates
 
 object ShooterSubsystem : FalconSubsystem() {
