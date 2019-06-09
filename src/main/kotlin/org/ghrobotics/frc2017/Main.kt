@@ -1,7 +1,7 @@
 package org.ghrobotics.frc2017
 
-import edu.wpi.first.wpilibj.RobotBase
+import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 fun main() {
-    RobotBase.startRobot { Robot }
+    FalconTimedRobot.startRobot { Robot }
 }

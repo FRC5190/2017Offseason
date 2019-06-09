@@ -3,9 +3,9 @@ package org.ghrobotics.frc2017.subsystems
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced
 import edu.wpi.first.wpilibj.Notifier
+import edu.wpi.first.wpilibj.experimental.command.SendableCommandBase
 import org.ghrobotics.frc2017.Constants
 import org.ghrobotics.frc2017.controllers.FlywheelController
-import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.motors.ctre.FalconSRX
 
@@ -36,9 +36,13 @@ object Flywheel : FalconSubsystem() {
         masterMotor.talonSRX.configPeakOutputForward(1.0)
         masterMotor.outputInverted = true
 
-        defaultCommand = object : FalconCommand(this@Flywheel) {
-            override suspend fun initialize() {
-                zeroOutputs()
+        defaultCommand = object : SendableCommandBase() {
+            init {
+                addRequirements(this@Flywheel)
+            }
+
+            override fun initialize() {
+                setNeutral()
             }
         }
     }
@@ -47,7 +51,7 @@ object Flywheel : FalconSubsystem() {
         Notifier(this::update).startPeriodic(1.0 / 200.0)
     }
 
-    override fun zeroOutputs() {
+    override fun setNeutral() {
         wantedState = State.Nothing
     }
 

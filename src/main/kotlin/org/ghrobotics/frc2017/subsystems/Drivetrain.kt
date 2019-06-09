@@ -108,6 +108,10 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
         }
     }
 
+    override fun setNeutral() {
+        zeroOutputs()
+    }
+
     override fun periodic() {
         periodicIO.leftVoltage = leftMotor.voltageOutput
         periodicIO.rightVoltage = rightMotor.voltageOutput
