@@ -25,7 +25,7 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
     private var currentState = State.Nothing
     private var wantedState = State.Nothing
 
-    private val gyro = PigeonIMU(Constants.kDrivePigeonId)
+//    private val gyro = PigeonIMU(Constants.kDrivePigeonId)
 
     override val differentialDrive = Constants.kDriveModel
     override val trajectoryTracker = RamseteTracker(Constants.kDriveBeta, Constants.kDriveZeta)
@@ -121,7 +121,7 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
         periodicIO.leftRawSensorVelocity = leftMotor.encoder.rawVelocity
         periodicIO.rightRawSensorVelocity = rightMotor.encoder.rawVelocity
 
-        periodicIO.gyroAngle = gyro.fusedHeading
+        periodicIO.gyroAngle = 0.0
 
         when (wantedState) {
             State.Nothing -> {

@@ -6,6 +6,7 @@
 package org.ghrobotics.frc2017
 
 import edu.wpi.first.wpilibj.TimedRobot
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
 import org.ghrobotics.frc2017.subsystems.Agitator
 import org.ghrobotics.frc2017.subsystems.Drivetrain
 import org.ghrobotics.frc2017.subsystems.Flywheel
@@ -34,6 +35,11 @@ object Robot : TimedRobot() {
 
     override fun disabledInit() {
         SubsystemHandler.zeroOutputs()
+    }
+
+
+    override fun robotPeriodic() {
+        Shuffleboard.update()
     }
 
     operator fun FalconSubsystem.unaryPlus() {
