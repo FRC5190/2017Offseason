@@ -1,7 +1,7 @@
 package org.ghrobotics.frc2017.subsystems
 
 import org.ghrobotics.frc2017.Constants
-import org.ghrobotics.frc2017.commands.ClosedLoopFlywheelCOmmand
+import org.ghrobotics.frc2017.commands.ClosedLoopFlywheelCommand
 import org.ghrobotics.frc2017.commands.OpenLoopAgitatorCommand
 import org.ghrobotics.lib.commands.ConditionCommand
 import org.ghrobotics.lib.commands.FalconCommand
@@ -16,7 +16,7 @@ object Superstructure {
     fun shootFuel(speed_SI: Double): FalconCommand {
         return parallel {
 
-            +ClosedLoopFlywheelCOmmand(speed_SI)
+            +ClosedLoopFlywheelCommand(speed_SI)
             +sequential {
                 +ConditionCommand {
                     (Flywheel.speed_SI - speed_SI).absoluteValue < Constants.kFlywheelClosedLoopVelocityTolerance

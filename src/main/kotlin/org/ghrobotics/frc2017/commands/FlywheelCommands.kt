@@ -15,7 +15,7 @@ class OpenLoopFlywheelCommand(private val percentSource: Source<Double>) : Falco
     }
 }
 
-class ClosedLoopFlywheelCOmmand(private val speed_SI: Double) : FalconCommand(Flywheel) {
+class ClosedLoopFlywheelCommand(private val speed_SI: Double) : FalconCommand(Flywheel) {
     constructor(speed: AngularVelocity) : this(speed.value)
 
     override suspend fun initialize() {
