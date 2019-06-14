@@ -19,7 +19,16 @@ object Robot : FalconTimedRobot() {
         +Flywheel
     }
 
+    val velocity = Shuffleboard.getTab("5190").add("Flywheel Vel", 0.0)
+    val voltage = Shuffleboard.getTab("5190").add("Flywheel Voltage", 0.0)
+
     override fun robotPeriodic() {
         Shuffleboard.update()
+        velocity.entry.setDouble(Flywheel.speed_SI)
+        voltage.entry.setDouble(Flywheel.periodicIO.voltage)
+    }
+
+    override fun teleopPeriodic() {
+        Controls.update()
     }
 }

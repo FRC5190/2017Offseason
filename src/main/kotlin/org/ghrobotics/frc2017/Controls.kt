@@ -15,6 +15,10 @@ import org.ghrobotics.lib.wrappers.hid.xboxController
 object Controls {
     val driverController = xboxController(0) {
         axisButton(5, 0.1) { change(OpenLoopFlywheelCommand(source.map { -it })) }
-        button(kBumperRight).change(Superstructure.shootFuel(2 * Math.PI))
+        button(kBumperRight).change(Superstructure.shootFuel(200.0))
+    }
+
+    fun update() {
+        driverController.update()
     }
 }

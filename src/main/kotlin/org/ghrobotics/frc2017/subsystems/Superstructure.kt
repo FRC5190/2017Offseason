@@ -21,7 +21,7 @@ object Superstructure {
                 +WaitUntilCommand {
                     (Flywheel.speed_SI - speed_SI).absoluteValue < Constants.kFlywheelClosedLoopVelocityTolerance
                 }
-                +OpenLoopAgitatorCommand { 0.4 }
+                +OpenLoopAgitatorCommand { 0.25 }
             }
 
         }

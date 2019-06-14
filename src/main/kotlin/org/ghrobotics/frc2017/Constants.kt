@@ -66,7 +66,7 @@ object Constants {
 
     // Flywheel
     const val kFlywheelId = 13
-    val kFlywheelNativeUnitModel = NativeUnitRotationModel(1440.nativeUnits)
+    val kFlywheelNativeUnitModel = NativeUnitRotationModel(9000.nativeUnits)
 
     const val kFlywheelClosedLoopVelocityTolerance = 50.0
 

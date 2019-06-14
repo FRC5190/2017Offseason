@@ -26,10 +26,10 @@ object FlywheelCoeffs {
 
     val controllerCoeffs = StateSpaceControllerCoeffs<`2`, `1`, `1`>(
         K = mat(`1`, `2`).fill(
-            0.7365346559390376, 1.0
+            0.24, 1.0
         ),
         Kff = mat(`1`, `2`).fill(
-            0.635754996350343, 0.0
+            0.0, 0.0
         ),
         UMin = vec(`1`).fill(-12.0),
         UMax = vec(`1`).fill(+12.0)

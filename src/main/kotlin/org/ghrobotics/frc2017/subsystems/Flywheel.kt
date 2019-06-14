@@ -20,7 +20,7 @@ object Flywheel : FalconSubsystem() {
     // Subsystem Updates
     private var currentState = State.Nothing
     private var wantedState = State.Nothing
-    private val periodicIO = PeriodicIO()
+    val periodicIO = PeriodicIO()
 
     val speed_SI get() = Constants.kFlywheelNativeUnitModel.fromNativeUnitVelocity(periodicIO.rawSensorVelocity)
 
@@ -29,6 +29,8 @@ object Flywheel : FalconSubsystem() {
         masterMotor.feedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative
         masterMotor.brakeMode = false
         masterMotor.talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5)
+
+        masterMotor.encoder.encoderPhase = true
 
         masterMotor.talonSRX.configOpenloopRamp(.250)
 
@@ -85,7 +87,7 @@ object Flywheel : FalconSubsystem() {
         if (currentState != wantedState) currentState = wantedState
     }
 
-    private class PeriodicIO {
+    class PeriodicIO {
         var voltage = 0.0
         var current = 0.0
 
