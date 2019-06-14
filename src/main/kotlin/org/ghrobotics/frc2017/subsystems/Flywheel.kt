@@ -32,7 +32,7 @@ object Flywheel : FalconSubsystem() {
 
         masterMotor.encoder.encoderPhase = true
 
-        masterMotor.talonSRX.configOpenloopRamp(.250)
+        masterMotor.talonSRX.configOpenloopRamp(0.0)
 
         masterMotor.talonSRX.configPeakOutputReverse(0.0)
         masterMotor.talonSRX.configPeakOutputForward(1.0)
