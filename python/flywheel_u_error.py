@@ -33,42 +33,23 @@ class Flywheel(frccnt.System):
         # Number of motors
         num_motors = 1.0
         # Flywheel moment of inertia in kg-m^2
-        J = 0.002004
+        J = 0.002004 / 4
         # Gear ratio
         G = 30 / 18.0
 
         return frccnt.models.flywheel(frccnt.models.MOTOR_CIM, num_motors, J, G)
 
     def design_controller_observer(self):
-        q = [9.42]
+        q = [15.0]
         r = [12.0]
         self.design_lqr(q, r)
         # self.place_controller_poles([0.87])
         self.design_two_state_feedforward(q, r)
 
-        A_aug = np.concatenate(
-            (np.concatenate((self.sysd.A, self.sysd.B), axis=1),
-             np.concatenate((np.array([[0]]), np.array([[0]])), axis=1)),
-            axis=0
-        )
-        B_aug = np.concatenate(
-            (self.sysd.B, np.array([[0]])), axis=0
-        )
-        C_aug = np.concatenate((self.sysd.C, np.array([[0]])), axis=1)
-        D_aug = self.sysd.D
-        K_aug = np.concatenate((self.K, np.array([[1]])), axis=1)
-        Kff_aug = np.concatenate((self.Kff, np.array([[0]])), axis=1)
-
-        self.sysd.A = A_aug
-        self.sysd.B = B_aug
-        self.sysd.C = C_aug
-        self.sysd.D = D_aug
-        self.K = K_aug
-        self.Kff = Kff_aug
-
+    
         q_vel = 1.0
         r_vel = 0.01
-        self.design_kalman_filter([q_vel, 0.0], [r_vel])
+        self.design_kalman_filter([q_vel], [r_vel])
         # self.place_observer_poles([0.3])
 
 
@@ -96,7 +77,7 @@ def main():
         if t[i] < l0:
             r = np.array([[0]])
         elif t[i] < l1:
-            r = np.array([[9000 / 60 * 2 * math.pi]])
+            r = np.array([[90 / 60 * 2 * math.pi]])
         else:
             r = np.array([[0]])
         refs.append(r)

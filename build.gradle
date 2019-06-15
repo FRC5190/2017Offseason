@@ -51,9 +51,9 @@ dependencies {
     // We need to add the Kotlin stdlib in order to use most Kotlin language features.
     compile "org.jetbrains.kotlin:kotlin-stdlib"
 
-    compile "org.ghrobotics.FalconLibrary:core:86a8244"
-    compile "org.ghrobotics.FalconLibrary:wpi:86a8244"
-    compile "org.ghrobotics.FalconLibrary:vendorCTRE:86a8244"
+    compile "org.ghrobotics.FalconLibrary:core:1c4559d"
+    compile "org.ghrobotics.FalconLibrary:wpi:1c4559d"
+    compile "org.ghrobotics.FalconLibrary:vendorCTRE:1c4559d"
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

@@ -1,7 +1,7 @@
 package org.ghrobotics.frc2017.subsystems
 
-import edu.wpi.first.wpilibj.experimental.command.SendableCommandBase
 import org.ghrobotics.frc2017.Constants
+import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
 import org.ghrobotics.lib.mathematics.units.nativeunits.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.ctre.FalconSRX
@@ -15,11 +15,7 @@ object Agitator : FalconSubsystem() {
     private var wantedState = State.Nothing
 
     init {
-        defaultCommand = object : SendableCommandBase() {
-            init {
-                addRequirements(this@Agitator)
-            }
-
+        defaultCommand = object : FalconCommand(this@Agitator) {
             override fun initialize() {
                 setNeutral()
             }
