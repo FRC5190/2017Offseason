@@ -24,11 +24,9 @@ object Robot : FalconTimedRobot() {
 
     override fun robotPeriodic() {
         Shuffleboard.update()
+        Controls.update()
+
         velocity.entry.setDouble(Flywheel.speed_SI)
         voltage.entry.setDouble(Flywheel.voltage)
-    }
-
-    override fun teleopPeriodic() {
-        Controls.update()
     }
 }

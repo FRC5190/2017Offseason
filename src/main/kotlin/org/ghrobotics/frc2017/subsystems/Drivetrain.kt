@@ -2,7 +2,6 @@ package org.ghrobotics.frc2017.subsystems
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
 import com.ctre.phoenix.motorcontrol.StatusFrame
-import com.ctre.phoenix.sensors.PigeonIMU
 import com.team254.lib.physics.DifferentialDrive
 import org.ghrobotics.frc2017.Constants
 import org.ghrobotics.frc2017.commands.TeleopDriveCommand
@@ -97,14 +96,19 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
         listOf(leftMotor, rightMotor).forEach { masterMotor ->
             masterMotor.talonSRX.config_kP(0, 0.0)
             masterMotor.talonSRX.config_kD(0, 0.0)
+            masterMotor.talonSRX.configPeakOutputForward(0.5)
+            masterMotor.talonSRX.configPeakOutputReverse(-0.5)
         }
         zeroOutputs()
+
     }
 
     override fun recoverFromEmergency() {
         listOf(leftMotor, rightMotor).forEach { masterMotor ->
             masterMotor.talonSRX.config_kP(0, Constants.kDriveKp)
             masterMotor.talonSRX.config_kD(0, Constants.kDriveKd)
+            masterMotor.talonSRX.configPeakOutputForward(1.0)
+            masterMotor.talonSRX.configPeakOutputReverse(-1.0)
         }
     }
 
