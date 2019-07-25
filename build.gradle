@@ -54,6 +54,8 @@ dependencies {
     compile "org.ghrobotics.FalconLibrary:core:1c4559d"
     compile "org.ghrobotics.FalconLibrary:wpi:1c4559d"
     compile "org.ghrobotics.FalconLibrary:vendorCTRE:1c4559d"
+
+    compile 'com.github.Oblarg:command-rewrite-jitpack:1.1.4'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

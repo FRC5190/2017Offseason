@@ -6,27 +6,26 @@
 package org.ghrobotics.frc2017
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard
-import org.ghrobotics.frc2017.subsystems.Agitator
 import org.ghrobotics.frc2017.subsystems.Drivetrain
-import org.ghrobotics.frc2017.subsystems.Flywheel
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
 
     init {
-        +Drivetrain
-        +Agitator
-        +Flywheel
+        Drivetrain
     }
 
     val velocity = Shuffleboard.getTab("5190").add("Flywheel Vel", 0.0)
     val voltage = Shuffleboard.getTab("5190").add("Flywheel Voltage", 0.0)
 
-    override fun robotPeriodic() {
-        Shuffleboard.update()
-        Controls.update()
+    val slowMode = Shuffleboard.getTab("5190").add("Slow Mode", false)
 
-        velocity.entry.setDouble(Flywheel.speed_SI)
-        voltage.entry.setDouble(Flywheel.voltage)
+    override fun robotPeriodic() {
+//        Shuffleboard.update()
+//        Controls.update()
+//
+//        velocity.entry.setDouble(Flywheel.speed_SI)
+//        voltage.entry.setDouble(Flywheel.voltage)
+//        slowMode.entry.setBoolean(emergencyActive)
     }
 }
