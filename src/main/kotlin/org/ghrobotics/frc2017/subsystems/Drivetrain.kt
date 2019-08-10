@@ -1,3 +1,11 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Copyright 2019, Green Hope Falcons
+ */
+
 package org.ghrobotics.frc2017.subsystems
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
@@ -8,17 +16,26 @@ import org.ghrobotics.frc2017.commands.TeleopDriveCommand
 import org.ghrobotics.lib.localization.TankEncoderLocalization
 import org.ghrobotics.lib.mathematics.twodim.control.RamseteTracker
 import org.ghrobotics.lib.mathematics.twodim.geometry.Rotation2d
-import org.ghrobotics.lib.mathematics.units.Length
-import org.ghrobotics.lib.mathematics.units.amp
-import org.ghrobotics.lib.mathematics.units.second
+import org.ghrobotics.lib.mathematics.units.*
+import org.ghrobotics.lib.mathematics.units.derived.Volt
+import org.ghrobotics.lib.mathematics.units.derived.velocity
+import org.ghrobotics.lib.mathematics.units.derived.volt
+import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnit
+import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitVelocity
+import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnits
+import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnitsPer100ms
 import org.ghrobotics.lib.motors.ctre.FalconSRX
 import org.ghrobotics.lib.subsystems.EmergencyHandleable
 import org.ghrobotics.lib.subsystems.drive.TankDriveSubsystem
 
 object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
 
-    override val leftMotor = configureDriveGearbox(Constants.kDriveLeftMasterId, Constants.kDriveLeftSlaveId, true)
-    override val rightMotor = configureDriveGearbox(Constants.kDriveRightMasterId, Constants.kDriveRightSlaveId, false)
+    override val leftMotor = configureDriveGearbox(
+        Constants.kDriveLeftMasterId, Constants.kDriveLeftSlaveId, true
+    )
+    override val rightMotor = configureDriveGearbox(
+        Constants.kDriveRightMasterId, Constants.kDriveRightSlaveId, false
+    )
 
     private val periodicIO = PeriodicIO()
     private var currentState = State.Nothing
@@ -31,21 +48,25 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
 
     override val localization = TankEncoderLocalization(
         { angle },
-        { lPosition_SI },
-        { rPosition_SI }
+        { lPosition },
+        { rPosition }
     )
 
-    private val lPosition_SI: Double
-        get() = Constants.kDriveNativeUnitModel.fromNativeUnitPosition(periodicIO.leftRawSensorPosition)
+    private val lPosition: SIUnit<Meter>
+        get() = Constants.kDriveNativeUnitModel.fromNativeUnitPosition(
+            periodicIO.leftRawSensorPosition
+        )
 
-    private val rPosition_SI: Double
-        get() = Constants.kDriveNativeUnitModel.fromNativeUnitPosition(periodicIO.rightRawSensorPosition)
+    private val rPosition: SIUnit<Meter>
+        get() = Constants.kDriveNativeUnitModel.fromNativeUnitPosition(
+            periodicIO.rightRawSensorPosition
+        )
 
     private val angle: Rotation2d
         get() = Rotation2d.fromDegrees(periodicIO.gyroAngle)
 
-
-    private fun configureDriveGearbox(masterId: Int, slaveId: Int, isLeft: Boolean): FalconSRX<Length> {
+    private fun configureDriveGearbox(masterId: Int, slaveId: Int, isLeft: Boolean):
+            FalconSRX<Meter> {
 
         val masterMotor = FalconSRX(masterId, Constants.kDriveNativeUnitModel)
         val slaveMotor = FalconSRX(slaveId, Constants.kDriveNativeUnitModel)
@@ -57,9 +78,9 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
 
         masterMotor.feedbackSensor = FeedbackDevice.QuadEncoder
         masterMotor.encoder.encoderPhase = true
-        masterMotor.encoder.resetPosition(0.0)
+        masterMotor.encoder.resetPosition(0.meter)
 
-        fun configMotor(motor: FalconSRX<Length>) {
+        fun configMotor(motor: FalconSRX<Meter>) {
             motor.talonSRX.configPeakOutputForward(1.0)
             motor.talonSRX.configPeakOutputReverse(-1.0)
 
@@ -70,7 +91,7 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
 
             motor.configCurrentLimit(
                 true, FalconSRX.CurrentLimitConfig(
-                    80.amp,
+                    Constants.kDrivePeakCurrentLimit,
                     1.second,
                     Constants.kDriveCurrentLimit
                 )
@@ -80,7 +101,9 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
         configMotor(masterMotor)
         configMotor(slaveMotor)
 
-        masterMotor.talonSRX.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10)
+        @Suppress("MagicNumber")
+        masterMotor.talonSRX.setStatusFramePeriod(StatusFrame.Status_2_Feedback0,
+            10)
 
         masterMotor.talonSRX.config_kP(0, Constants.kDriveKp)
         masterMotor.talonSRX.config_kD(0, Constants.kDriveKd)
@@ -96,11 +119,10 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
         listOf(leftMotor, rightMotor).forEach { masterMotor ->
             masterMotor.talonSRX.config_kP(0, 0.0)
             masterMotor.talonSRX.config_kD(0, 0.0)
-            masterMotor.talonSRX.configPeakOutputForward(0.5)
-            masterMotor.talonSRX.configPeakOutputReverse(-0.5)
+            masterMotor.talonSRX.configPeakOutputForward(Constants.kSlowModeFactor)
+            masterMotor.talonSRX.configPeakOutputReverse(-Constants.kSlowModeFactor)
         }
         zeroOutputs()
-
     }
 
     override fun recoverFromEmergency() {
@@ -120,8 +142,8 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
         periodicIO.leftVoltage = leftMotor.voltageOutput
         periodicIO.rightVoltage = rightMotor.voltageOutput
 
-        periodicIO.leftCurrent = leftMotor.talonSRX.outputCurrent
-        periodicIO.rightCurrent = rightMotor.talonSRX.outputCurrent
+        periodicIO.leftCurrent = leftMotor.talonSRX.outputCurrent.amp
+        periodicIO.rightCurrent = rightMotor.talonSRX.outputCurrent.amp
 
         periodicIO.leftRawSensorPosition = leftMotor.encoder.rawPosition
         periodicIO.rightRawSensorPosition = rightMotor.encoder.rawPosition
@@ -137,8 +159,12 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
                 rightMotor.setNeutral()
             }
             State.PathFollowing -> {
-                leftMotor.setVelocity(periodicIO.leftDemand, periodicIO.leftFeedforward)
-                rightMotor.setVelocity(periodicIO.rightDemand, periodicIO.rightFeedforward)
+                leftMotor.setVelocity(
+                    periodicIO.leftDemand.meter.velocity, periodicIO.leftFeedforward
+                )
+                rightMotor.setVelocity(
+                    periodicIO.rightDemand.meter.velocity, periodicIO.rightFeedforward
+                )
             }
             State.OpenLoop -> {
                 leftMotor.setDutyCycle(periodicIO.leftDemand)
@@ -148,27 +174,30 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
         if (currentState != wantedState) currentState = wantedState
     }
 
+    override fun tankDrive(leftPercent: Double, rightPercent: Double) =
+        setOpenLoop(leftPercent, rightPercent)
 
-    override fun tankDrive(leftPercent: Double, rightPercent: Double) = setOpenLoop(leftPercent, rightPercent)
-
-    fun setOpenLoop(left: Double, right: Double) {
+    private fun setOpenLoop(left: Double, right: Double) {
         wantedState = State.OpenLoop
 
         periodicIO.leftDemand = left
         periodicIO.rightDemand = right
 
-        periodicIO.leftFeedforward = 0.0
-        periodicIO.rightFeedforward = 0.0
+        periodicIO.leftFeedforward = 0.volt
+        periodicIO.rightFeedforward = 0.volt
     }
 
-    override fun setOutput(wheelVelocities: DifferentialDrive.WheelState, wheelVoltages: DifferentialDrive.WheelState) {
+    override fun setOutput(
+        wheelVelocities: DifferentialDrive.WheelState,
+        wheelVoltages: DifferentialDrive.WheelState
+    ) {
         wantedState = State.PathFollowing
 
         periodicIO.leftDemand = wheelVelocities.left * differentialDrive.wheelRadius
         periodicIO.rightDemand = wheelVelocities.right * differentialDrive.wheelRadius
 
-        periodicIO.leftFeedforward = wheelVoltages.left
-        periodicIO.rightFeedforward = wheelVoltages.right
+        periodicIO.leftFeedforward = wheelVoltages.left.volt
+        periodicIO.rightFeedforward = wheelVoltages.right.volt
     }
 
     override fun zeroOutputs() {
@@ -180,25 +209,25 @@ object Drivetrain : TankDriveSubsystem(), EmergencyHandleable {
 
     private class PeriodicIO {
         // Inputs
-        var leftVoltage: Double = 0.0
-        var rightVoltage: Double = 0.0
+        var leftVoltage: SIUnit<Volt> = 0.volt
+        var rightVoltage: SIUnit<Volt> = 0.volt
 
-        var leftCurrent: Double = 0.0
-        var rightCurrent: Double = 0.0
+        var leftCurrent: SIUnit<Ampere> = 0.amp
+        var rightCurrent: SIUnit<Ampere> = 0.amp
 
-        var leftRawSensorPosition: Double = 0.0
-        var rightRawSensorPosition: Double = 0.0
+        var leftRawSensorPosition: SIUnit<NativeUnit> = 0.nativeUnits
+        var rightRawSensorPosition: SIUnit<NativeUnit> = 0.nativeUnits
         var gyroAngle = 0.0
 
-        var leftRawSensorVelocity: Double = 0.0
-        var rightRawSensorVelocity: Double = 0.0
+        var leftRawSensorVelocity: SIUnit<NativeUnitVelocity> = 0.nativeUnitsPer100ms
+        var rightRawSensorVelocity: SIUnit<NativeUnitVelocity> = 0.nativeUnitsPer100ms
 
         // Outputs
         var leftDemand: Double = 0.0
         var rightDemand: Double = 0.0
 
-        var leftFeedforward: Double = 0.0
-        var rightFeedforward: Double = 0.0
+        var leftFeedforward: SIUnit<Volt> = 0.volt
+        var rightFeedforward: SIUnit<Volt> = 0.volt
     }
 
     private enum class State {

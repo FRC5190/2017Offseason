@@ -1,3 +1,13 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Copyright 2019, Green Hope Falcons
+ */
+
+@file:Suppress("WildcardImport")
+
 package org.ghrobotics.frc2017.controllers
 
 import frc.team4069.keigen.*
@@ -5,6 +15,7 @@ import org.ghrobotics.lib.mathematics.statespace.StateSpaceControllerCoeffs
 import org.ghrobotics.lib.mathematics.statespace.StateSpaceObserverCoeffs
 import org.ghrobotics.lib.mathematics.statespace.StateSpacePlantCoeffs
 
+@Suppress("MagicNumber")
 object FlywheelCoeffs {
     val plantCoeffs = StateSpacePlantCoeffs(
         `2`, `1`, `1`,

@@ -1,4 +1,12 @@
 /*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Copyright 2019, Green Hope Falcons
+ */
+
+/*
  * FRC Team 5190
  * Green Hope Falcons
  */
@@ -12,21 +20,14 @@ import org.ghrobotics.frc2017.subsystems.Flywheel
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
-
     init {
         +Drivetrain
         +Agitator
         +Flywheel
     }
 
-    val velocity = Shuffleboard.getTab("5190").add("Flywheel Vel", 0.0)
-    val voltage = Shuffleboard.getTab("5190").add("Flywheel Voltage", 0.0)
-
     override fun robotPeriodic() {
         Shuffleboard.update()
         Controls.update()
-
-        velocity.entry.setDouble(Flywheel.speed_SI)
-        voltage.entry.setDouble(Flywheel.voltage)
     }
 }

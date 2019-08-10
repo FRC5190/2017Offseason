@@ -1,9 +1,22 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Copyright 2019, Green Hope Falcons
+ */
+
 package org.ghrobotics.frc2017.subsystems
 
 import org.ghrobotics.frc2017.Constants
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
-import org.ghrobotics.lib.mathematics.units.nativeunits.DefaultNativeUnitModel
+import org.ghrobotics.lib.mathematics.units.Ampere
+import org.ghrobotics.lib.mathematics.units.SIUnit
+import org.ghrobotics.lib.mathematics.units.amp
+import org.ghrobotics.lib.mathematics.units.derived.Volt
+import org.ghrobotics.lib.mathematics.units.derived.volt
+import org.ghrobotics.lib.mathematics.units.nativeunit.DefaultNativeUnitModel
 import org.ghrobotics.lib.motors.ctre.FalconSRX
 
 object Agitator : FalconSubsystem() {
@@ -24,7 +37,7 @@ object Agitator : FalconSubsystem() {
 
     override fun periodic() {
         periodicIO.voltage = masterMotor.voltageOutput
-        periodicIO.current = masterMotor.talonSRX.outputCurrent
+        periodicIO.current = masterMotor.talonSRX.outputCurrent.amp
 
         when (wantedState) {
             State.Nothing -> masterMotor.setNeutral()
@@ -43,8 +56,8 @@ object Agitator : FalconSubsystem() {
     }
 
     private class PeriodicIO {
-        var voltage = 0.0
-        var current = 0.0
+        var voltage: SIUnit<Volt> = 0.volt
+        var current: SIUnit<Ampere> = 0.amp
 
         var demand = 0.0
     }

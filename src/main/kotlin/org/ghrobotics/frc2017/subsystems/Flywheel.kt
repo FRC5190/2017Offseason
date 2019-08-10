@@ -1,3 +1,11 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Copyright 2019, Green Hope Falcons
+ */
+
 package org.ghrobotics.frc2017.subsystems
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
@@ -7,6 +15,13 @@ import org.ghrobotics.frc2017.Constants
 import org.ghrobotics.frc2017.controllers.FlywheelController
 import org.ghrobotics.lib.commands.FalconCommand
 import org.ghrobotics.lib.commands.FalconSubsystem
+import org.ghrobotics.lib.mathematics.units.Ampere
+import org.ghrobotics.lib.mathematics.units.SIUnit
+import org.ghrobotics.lib.mathematics.units.amp
+import org.ghrobotics.lib.mathematics.units.derived.Volt
+import org.ghrobotics.lib.mathematics.units.derived.volt
+import org.ghrobotics.lib.mathematics.units.nativeunit.NativeUnitVelocity
+import org.ghrobotics.lib.mathematics.units.nativeunit.nativeUnitsPer100ms
 import org.ghrobotics.lib.motors.ctre.FalconSRX
 
 object Flywheel : FalconSubsystem() {
@@ -22,13 +37,15 @@ object Flywheel : FalconSubsystem() {
     private var wantedState = State.Nothing
     private val periodicIO = PeriodicIO()
 
-    val speed_SI get() = Constants.kFlywheelNativeUnitModel.fromNativeUnitVelocity(periodicIO.rawSensorVelocity)
-    val voltage get() = periodicIO.voltage
+    val speed get() =
+        Constants.kFlywheelNativeUnitModel.fromNativeUnitVelocity(periodicIO.rawSensorVelocity)
 
     init {
         // Setup Hardware Controller
         masterMotor.feedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative
         masterMotor.brakeMode = false
+
+        @Suppress("MagicNumber")
         masterMotor.talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5)
 
         masterMotor.encoder.encoderPhase = true
@@ -48,7 +65,7 @@ object Flywheel : FalconSubsystem() {
     }
 
     override fun lateInit() {
-        Notifier(this::update).startPeriodic(1.0 / 200.0)
+        Notifier(this::update).startPeriodic(Constants.kFlywheelNotifierPeriod)
     }
 
     override fun setNeutral() {
@@ -67,11 +84,11 @@ object Flywheel : FalconSubsystem() {
 
     private fun update() {
         periodicIO.voltage = masterMotor.voltageOutput
-        periodicIO.current = masterMotor.talonSRX.outputCurrent
+        periodicIO.current = masterMotor.talonSRX.outputCurrent.amp
 
         periodicIO.rawSensorVelocity = masterMotor.encoder.rawVelocity
 
-        controller.setMeasuredVelocity(speed_SI)
+        controller.setMeasuredVelocity(speed.value)
         controller.update()
 
         if (wantedState == State.Velocity) controller.setReference(periodicIO.demand)
@@ -86,10 +103,10 @@ object Flywheel : FalconSubsystem() {
     }
 
     private class PeriodicIO {
-        var voltage = 0.0
-        var current = 0.0
+        var voltage: SIUnit<Volt> = 0.volt
+        var current: SIUnit<Ampere> = 0.amp
 
-        var rawSensorVelocity = 0.0
+        var rawSensorVelocity: SIUnit<NativeUnitVelocity> = 0.nativeUnitsPer100ms
 
         var demand = 0.0
     }

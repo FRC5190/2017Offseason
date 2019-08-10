@@ -1,7 +1,18 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Copyright 2019, Green Hope Falcons
+ */
+
+@file:Suppress("WildcardImport")
+
 package org.ghrobotics.frc2017.controllers
 
 import frc.team4069.keigen.*
 import org.ghrobotics.lib.mathematics.statespace.*
+import org.ghrobotics.lib.mathematics.units.derived.volt
 
 class FlywheelController {
     private val plant = StateSpacePlant(FlywheelCoeffs.plantCoeffs)
@@ -15,7 +26,7 @@ class FlywheelController {
     /**
      * Returns the input voltage in Volts
      */
-    val voltage get() = u[0, 0]
+    val voltage get() = u[0, 0].volt
 
     /**
      * Sets the controller reference
