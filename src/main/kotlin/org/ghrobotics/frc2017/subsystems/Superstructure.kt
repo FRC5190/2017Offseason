@@ -20,17 +20,17 @@ import org.ghrobotics.lib.mathematics.units.derived.AngularVelocity
 
 @Suppress("SpacingAroundUnaryOperators")
 object Superstructure {
-    fun shootFuel(speed: SIUnit<AngularVelocity>): Command {
-        return parallel {
-            +ClosedLoopFlywheelCommand(speed)
-            +sequential {
-                +WaitUntilCommand {
-                    (Flywheel.speed - speed).absoluteValue <
-                            Constants.kFlywheelClosedLoopVelocityTolerance
-                }
-                @Suppress("MagicNumber")
-                +OpenLoopAgitatorCommand { 0.25 }
-            }
+  fun shootFuel(speed: SIUnit<AngularVelocity>): Command {
+    return parallel {
+      +ClosedLoopFlywheelCommand(speed)
+      +sequential {
+        +WaitUntilCommand {
+          (Flywheel.speed - speed).absoluteValue <
+            Constants.kFlywheelClosedLoopVelocityTolerance
         }
+        @Suppress("MagicNumber")
+        +OpenLoopAgitatorCommand { 0.25 }
+      }
     }
+  }
 }

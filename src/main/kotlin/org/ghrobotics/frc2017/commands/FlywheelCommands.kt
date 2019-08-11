@@ -15,22 +15,22 @@ import org.ghrobotics.lib.mathematics.units.derived.AngularVelocity
 import org.ghrobotics.lib.utils.Source
 
 class OpenLoopFlywheelCommand(private val percentSource: Source<Double>) : FalconCommand(Flywheel) {
-    override fun execute() {
-        Flywheel.setOpenLoop(percentSource())
-    }
+  override fun execute() {
+    Flywheel.setOpenLoop(percentSource())
+  }
 
-    override fun end(interrupted: Boolean) {
-        Flywheel.setNeutral()
-    }
+  override fun end(interrupted: Boolean) {
+    Flywheel.setNeutral()
+  }
 }
 
 class ClosedLoopFlywheelCommand(private val speed: SIUnit<AngularVelocity>) :
-    FalconCommand(Flywheel) {
-    override fun initialize() {
-        Flywheel.setVelocity(speed.value)
-    }
+  FalconCommand(Flywheel) {
+  override fun initialize() {
+    Flywheel.setVelocity(speed.value)
+  }
 
-    override fun end(interrupted: Boolean) {
-        Flywheel.setNeutral()
-    }
+  override fun end(interrupted: Boolean) {
+    Flywheel.setNeutral()
+  }
 }

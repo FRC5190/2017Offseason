@@ -22,15 +22,15 @@ import org.ghrobotics.lib.wrappers.hid.*
 
 @Suppress("MagicNumber")
 object Controls {
-    val driverController = xboxController(0) {
-        axisButton(5, 0.1) { change(OpenLoopFlywheelCommand(source.map { -it })) }
-        button(kBumperRight).change(Superstructure.shootFuel(200.radian.velocity))
+  val driverController = xboxController(0) {
+    axisButton(5, 0.1) { change(OpenLoopFlywheelCommand(source.map { -it })) }
+    button(kBumperRight).change(Superstructure.shootFuel(200.radian.velocity))
 
-        button(kBack).changeOn { Robot.activateEmergency() }
-        button(kStart).changeOn { Robot.recoverFromEmergency() }
-    }
+    button(kBack).changeOn { Robot.activateEmergency() }
+    button(kStart).changeOn { Robot.recoverFromEmergency() }
+  }
 
-    fun update() {
-        driverController.update()
-    }
+  fun update() {
+    driverController.update()
+  }
 }

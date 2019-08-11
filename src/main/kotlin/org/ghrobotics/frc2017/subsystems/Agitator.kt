@@ -21,48 +21,49 @@ import org.ghrobotics.lib.motors.ctre.FalconSRX
 
 object Agitator : FalconSubsystem() {
 
-    private val masterMotor = FalconSRX(Constants.kAgitatorId, DefaultNativeUnitModel)
+  private val masterMotor =
+    FalconSRX(Constants.kAgitatorId, DefaultNativeUnitModel)
 
-    private val periodicIO = PeriodicIO()
-    private var currentState = State.Nothing
-    private var wantedState = State.Nothing
+  private val periodicIO = PeriodicIO()
+  private var currentState = State.Nothing
+  private var wantedState = State.Nothing
 
-    init {
-        defaultCommand = object : FalconCommand(this@Agitator) {
-            override fun initialize() {
-                setNeutral()
-            }
-        }
+  init {
+    defaultCommand = object : FalconCommand(this@Agitator) {
+      override fun initialize() {
+        setNeutral()
+      }
     }
+  }
 
-    override fun periodic() {
-        periodicIO.voltage = masterMotor.voltageOutput
-        periodicIO.current = masterMotor.talonSRX.outputCurrent.amp
+  override fun periodic() {
+    periodicIO.voltage = masterMotor.voltageOutput
+    periodicIO.current = masterMotor.talonSRX.outputCurrent.amp
 
-        when (wantedState) {
-            State.Nothing -> masterMotor.setNeutral()
-            State.OpenLoop -> masterMotor.setDutyCycle(periodicIO.demand)
-        }
-        if (currentState != wantedState) currentState = wantedState
+    when (wantedState) {
+      State.Nothing -> masterMotor.setNeutral()
+      State.OpenLoop -> masterMotor.setDutyCycle(periodicIO.demand)
     }
+    if (currentState != wantedState) currentState = wantedState
+  }
 
-    fun setOpenLoop(percent: Double) {
-        wantedState = State.OpenLoop
-        periodicIO.demand = percent
-    }
+  fun setOpenLoop(percent: Double) {
+    wantedState = State.OpenLoop
+    periodicIO.demand = percent
+  }
 
-    override fun setNeutral() {
-        wantedState = State.Nothing
-    }
+  override fun setNeutral() {
+    wantedState = State.Nothing
+  }
 
-    private class PeriodicIO {
-        var voltage: SIUnit<Volt> = 0.volt
-        var current: SIUnit<Ampere> = 0.amp
+  private class PeriodicIO {
+    var voltage: SIUnit<Volt> = 0.volt
+    var current: SIUnit<Ampere> = 0.amp
 
-        var demand = 0.0
-    }
+    var demand = 0.0
+  }
 
-    private enum class State {
-        Nothing, OpenLoop
-    }
+  private enum class State {
+    Nothing, OpenLoop
+  }
 }

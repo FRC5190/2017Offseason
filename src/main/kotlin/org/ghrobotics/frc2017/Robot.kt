@@ -20,14 +20,14 @@ import org.ghrobotics.frc2017.subsystems.Flywheel
 import org.ghrobotics.lib.wrappers.FalconTimedRobot
 
 object Robot : FalconTimedRobot() {
-    init {
-        +Drivetrain
-        +Agitator
-        +Flywheel
-    }
+  init {
+    +Drivetrain
+    +Agitator
+    +Flywheel
+  }
 
-    override fun robotPeriodic() {
-        Shuffleboard.update()
-        Controls.update()
-    }
+  override fun robotPeriodic() {
+    Shuffleboard.update()
+    Controls.update()
+  }
 }

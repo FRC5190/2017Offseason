@@ -15,44 +15,44 @@ import org.ghrobotics.lib.mathematics.statespace.*
 import org.ghrobotics.lib.mathematics.units.derived.volt
 
 class FlywheelController {
-    private val plant = StateSpacePlant(FlywheelCoeffs.plantCoeffs)
-    private val controller = StateSpaceController(FlywheelCoeffs.controllerCoeffs, plant)
-    private val observer = StateSpaceObserver(FlywheelCoeffs.observerCoeffs, plant)
+  private val plant = StateSpacePlant(FlywheelCoeffs.plantCoeffs)
+  private val controller = StateSpaceController(FlywheelCoeffs.controllerCoeffs, plant)
+  private val observer = StateSpaceObserver(FlywheelCoeffs.observerCoeffs, plant)
 
-    private var reference = vec(`2`).fill(0.0, 0.0)
-    private var y = vec(`1`).fill(0.0)
-    private var u = vec(`1`).fill(0.0)
+  private var reference = vec(`2`).fill(0.0, 0.0)
+  private var y = vec(`1`).fill(0.0)
+  private var u = vec(`1`).fill(0.0)
 
-    /**
-     * Returns the input voltage in Volts
-     */
-    val voltage get() = u[0, 0].volt
+  /**
+   * Returns the input voltage in Volts
+   */
+  val voltage get() = u[0, 0].volt
 
-    /**
-     * Sets the controller reference
-     * @param velocity The desired velocity in rad/s
-     */
-    fun setReference(velocity: Double) {
-        reference[0, 0] = velocity
-    }
+  /**
+   * Sets the controller reference
+   * @param velocity The desired velocity in rad/s
+   */
+  fun setReference(velocity: Double) {
+    reference[0, 0] = velocity
+  }
 
-    /**
-     * Set the measured velocity
-     * @param velocity The measured velocity in rad/s
-     */
-    fun setMeasuredVelocity(velocity: Double) {
-        y[0, 0] = velocity
-    }
+  /**
+   * Set the measured velocity
+   * @param velocity The measured velocity in rad/s
+   */
+  fun setMeasuredVelocity(velocity: Double) {
+    y[0, 0] = velocity
+  }
 
-    /**
-     * Update the controller
-     */
-    fun update() {
-        observer.correct(controller.u, y)
-        observer.predict(controller.u)
+  /**
+   * Update the controller
+   */
+  fun update() {
+    observer.correct(controller.u, y)
+    observer.predict(controller.u)
 
-        controller.update(reference, observer.xHat)
+    controller.update(reference, observer.xHat)
 
-        this.u = controller.u
-    }
+    this.u = controller.u
+  }
 }
